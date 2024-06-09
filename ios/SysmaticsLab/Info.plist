@@ -49,6 +49,14 @@
       <key>NSAllowsLocalNetworking</key>
       <true/>
     </dict>
+    <key>NSFaceIDUsageDescription</key>
+    <string>Allow $(PRODUCT_NAME) to access your Face ID biometric data.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>This app uses location data to provide accurate environmental data collection.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>This app needs access to your microphone to record audio.</string>
+    <key>NSMotionUsageDescription</key>
+    <string>This app uses motion sensors to provide data collection functionality for scientific research.</string>
     <key>NSUserActivityTypes</key>
     <array>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
@@ -79,14 +87,5 @@
     <string>Automatic</string>
     <key>UIViewControllerBasedStatusBarAppearance</key>
     <false/>
-
-    <!-- Add the motion usage description key -->
-    <key>NSMotionUsageDescription</key>
-    <string>This app uses motion sensors to provide data collection functionality for scientific research.</string>
-
-    <!-- If your app uses location data, you can also add: -->
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>This app uses location data to provide accurate environmental data collection.</string>
-
   </dict>
 </plist>

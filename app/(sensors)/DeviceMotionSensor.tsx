@@ -1,24 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet, useColorScheme } from 'react-native';
 import { DeviceMotion } from 'expo-sensors';
-import { getFormattedTimestamp } from '../(utils)/timeStamp'; // Importing utility function for formatted timestamp
+import { getFormattedTimestamp } from '../(utils)/timeStamp';
 
-// Component for Device Motion Sensor
 const DeviceMotionSensor = ({ isAllSensorsActive }) => {
-  // State variables
   const [data, setData] = useState({
     acceleration: { x: 0, y: 0, z: 0 },
     accelerationIncludingGravity: { x: 0, y: 0, z: 0 },
     rotation: { alpha: 0, beta: 0, gamma: 0 },
-    rotationRate: { alpha: 0, beta: 0, gamma: 0 },
+    rotationRate: { alpha: 0, beta: 0, gamma: 0 }
   });
   const [timestamp, setTimestamp] = useState('');
   const [isSensorActive, setIsSensorActive] = useState(false);
   const [subscription, setSubscription] = useState(null);
   const [isAvailable, setIsAvailable] = useState(true);
-  const colorScheme = useColorScheme(); // Custom hook for color scheme
+  const colorScheme = useColorScheme();
 
-  // Effect to check sensor availability
   useEffect(() => {
     const checkAvailability = async () => {
       const available = await DeviceMotion.isAvailableAsync();
@@ -26,7 +23,6 @@ const DeviceMotionSensor = ({ isAllSensorsActive }) => {
     };
     checkAvailability();
 
-    // Cleanup subscription on unmount
     return () => {
       if (subscription) {
         subscription.remove();
@@ -34,7 +30,6 @@ const DeviceMotionSensor = ({ isAllSensorsActive }) => {
     };
   }, [subscription]);
 
-  // Effect to handle global sensor start/stop
   useEffect(() => {
     if (isAllSensorsActive) {
       startSensor();
@@ -43,16 +38,15 @@ const DeviceMotionSensor = ({ isAllSensorsActive }) => {
     }
   }, [isAllSensorsActive]);
 
-  // Function to start the sensor
   const startSensor = () => {
     if (isAvailable && !isSensorActive) {
       DeviceMotion.setUpdateInterval(1000);
       const newSubscription = DeviceMotion.addListener(deviceMotionData => {
         setData({
-          acceleration: deviceMotionData.acceleration,
-          accelerationIncludingGravity: deviceMotionData.accelerationIncludingGravity,
-          rotation: deviceMotionData.rotation,
-          rotationRate: deviceMotionData.rotationRate,
+          acceleration: deviceMotionData.acceleration || { x: 0, y: 0, z: 0 },
+          accelerationIncludingGravity: deviceMotionData.accelerationIncludingGravity || { x: 0, y: 0, z: 0 },
+          rotation: deviceMotionData.rotation || { alpha: 0, beta: 0, gamma: 0 },
+          rotationRate: deviceMotionData.rotationRate || { alpha: 0, beta: 0, gamma: 0 }
         });
         setTimestamp(getFormattedTimestamp());
       });
@@ -61,7 +55,6 @@ const DeviceMotionSensor = ({ isAllSensorsActive }) => {
     }
   };
 
-  // Function to stop the sensor
   const stopSensor = () => {
     if (subscription) {
       subscription.remove();
@@ -70,10 +63,8 @@ const DeviceMotionSensor = ({ isAllSensorsActive }) => {
     }
   };
 
-  // Dynamic styles based on color scheme
   const dynamicStyles = styles(colorScheme);
 
-  // Display message if sensor is not available
   if (!isAvailable) {
     return (
       <View style={dynamicStyles.container}>
@@ -109,7 +100,6 @@ const DeviceMotionSensor = ({ isAllSensorsActive }) => {
   );
 };
 
-// Styles for the component
 const styles = (colorScheme: string) => StyleSheet.create({
   container: {
     marginTop: 20,

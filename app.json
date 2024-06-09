@@ -17,7 +17,8 @@
       "bundleIdentifier": "com.kartikmandar.SysmaticsLab",
       "infoPlist": {
         "NSMotionUsageDescription": "This app uses motion sensors to provide data collection functionality for scientific research.",
-        "NSLocationWhenInUseUsageDescription": "This app uses location data to provide accurate environmental data collection."
+        "NSLocationWhenInUseUsageDescription": "This app uses location data to provide accurate environmental data collection.",
+        "NSMicrophoneUsageDescription": "This app needs access to your microphone to record audio."
       }
     },
     "android": {
@@ -28,7 +29,8 @@
       "package": "com.kartikmandar.SysmaticsLab",
       "permissions": [
         "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION"
+        "ACCESS_COARSE_LOCATION",
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "web": {
