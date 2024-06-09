@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet, useColorScheme } from 'react-native';
 import { DeviceMotion } from 'expo-sensors';
-import { getFormattedTimestamp } from '../(utils)/timeStamp';
+import { getFormattedTimestamp } from '../(utils)/timeStamp'; // Importing utility function for formatted timestamp
 
-const DeviceMotionSensor = () => {
+// Component for Device Motion Sensor
+const DeviceMotionSensor = ({ isAllSensorsActive }) => {
+  // State variables
   const [data, setData] = useState({
     acceleration: { x: 0, y: 0, z: 0 },
     accelerationIncludingGravity: { x: 0, y: 0, z: 0 },
     rotation: { alpha: 0, beta: 0, gamma: 0 },
-    rotationRate: { alpha: 0, beta: 0, gamma: 0 }
+    rotationRate: { alpha: 0, beta: 0, gamma: 0 },
   });
   const [timestamp, setTimestamp] = useState('');
   const [isSensorActive, setIsSensorActive] = useState(false);
   const [subscription, setSubscription] = useState(null);
   const [isAvailable, setIsAvailable] = useState(true);
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme(); // Custom hook for color scheme
 
+  // Effect to check sensor availability
   useEffect(() => {
     const checkAvailability = async () => {
       const available = await DeviceMotion.isAvailableAsync();
@@ -23,6 +26,7 @@ const DeviceMotionSensor = () => {
     };
     checkAvailability();
 
+    // Cleanup subscription on unmount
     return () => {
       if (subscription) {
         subscription.remove();
@@ -30,15 +34,25 @@ const DeviceMotionSensor = () => {
     };
   }, [subscription]);
 
+  // Effect to handle global sensor start/stop
+  useEffect(() => {
+    if (isAllSensorsActive) {
+      startSensor();
+    } else {
+      stopSensor();
+    }
+  }, [isAllSensorsActive]);
+
+  // Function to start the sensor
   const startSensor = () => {
-    if (isAvailable) {
+    if (isAvailable && !isSensorActive) {
       DeviceMotion.setUpdateInterval(1000);
       const newSubscription = DeviceMotion.addListener(deviceMotionData => {
         setData({
           acceleration: deviceMotionData.acceleration,
           accelerationIncludingGravity: deviceMotionData.accelerationIncludingGravity,
           rotation: deviceMotionData.rotation,
-          rotationRate: deviceMotionData.rotationRate
+          rotationRate: deviceMotionData.rotationRate,
         });
         setTimestamp(getFormattedTimestamp());
       });
@@ -47,6 +61,7 @@ const DeviceMotionSensor = () => {
     }
   };
 
+  // Function to stop the sensor
   const stopSensor = () => {
     if (subscription) {
       subscription.remove();
@@ -55,8 +70,10 @@ const DeviceMotionSensor = () => {
     }
   };
 
+  // Dynamic styles based on color scheme
   const dynamicStyles = styles(colorScheme);
 
+  // Display message if sensor is not available
   if (!isAvailable) {
     return (
       <View style={dynamicStyles.container}>
@@ -92,6 +109,7 @@ const DeviceMotionSensor = () => {
   );
 };
 
+// Styles for the component
 const styles = (colorScheme: string) => StyleSheet.create({
   container: {
     marginTop: 20,

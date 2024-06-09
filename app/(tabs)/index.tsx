@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Image, StyleSheet, TouchableOpacity, Text, View, Dimensions, Platform, ActivityIndicator } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity, Text, View, Dimensions, Platform, ActivityIndicator, Button } from 'react-native';
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
@@ -16,11 +16,15 @@ import DeviceMotionSensor from '../(sensors)/DeviceMotionSensor';
 
 const { width: screenWidth } = Dimensions.get('window');
 
+// Define the main HomeScreen component
 export default function HomeScreen() {
+  // Define state variables
   const [modalVisible, setModalVisible] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAllSensorsActive, setIsAllSensorsActive] = useState(false);
 
+  // Effect to check login status on component mount
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
@@ -43,10 +47,12 @@ export default function HomeScreen() {
     checkLoginStatus();
   }, []);
 
+  // Function to handle login button press
   const handleLogin = () => {
     setModalVisible(true);
   };
 
+  // Function to handle successful login
   const handleLoginSuccess = async () => {
     setIsLoggedIn(true);
     setModalVisible(false);
@@ -62,6 +68,17 @@ export default function HomeScreen() {
     }
   };
 
+  // Function to start all sensors
+  const startAllSensors = () => {
+    setIsAllSensorsActive(true);
+  };
+
+  // Function to stop all sensors
+  const stopAllSensors = () => {
+    setIsAllSensorsActive(false);
+  };
+
+  // Display loading indicator if data is still loading
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
@@ -71,6 +88,7 @@ export default function HomeScreen() {
   }
 
   return (
+    // Use ParallaxScrollView for the main content
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
       headerImage={
@@ -88,35 +106,36 @@ export default function HomeScreen() {
         {isLoggedIn ? (
           <>
             <ThemedText>Welcome to sensor collection</ThemedText>
+            {/* Button to start or stop all sensors */}
+            <Button title={isAllSensorsActive ? "Stop All Sensors" : "Start All Sensors"} onPress={isAllSensorsActive ? stopAllSensors : startAllSensors} />
             <View style={styles.sensorContainer}>
               <ThemedText type="subtitle">Accelerometer Data</ThemedText>
-              <AccelerometerSensor />
+              <AccelerometerSensor isAllSensorsActive={isAllSensorsActive} />
               <View style={styles.spacer} />
 
               <ThemedText type="subtitle">Gyroscope Data</ThemedText>
-              <GyroscopeSensor />
+              <GyroscopeSensor isAllSensorsActive={isAllSensorsActive} />
               <View style={styles.spacer} />
 
               <ThemedText type="subtitle">Magnetometer Data</ThemedText>
-              <MagnetometerSensor />
+              <MagnetometerSensor isAllSensorsActive={isAllSensorsActive} />
               <View style={styles.spacer} />
 
               <ThemedText type="subtitle">Barometer Data</ThemedText>
-              <BarometerSensor />
+              <BarometerSensor isAllSensorsActive={isAllSensorsActive} />
               <View style={styles.spacer} />
 
               <ThemedText type="subtitle">Light Sensor Data</ThemedText>
-              <LightSensorComponent />
+              <LightSensorComponent isAllSensorsActive={isAllSensorsActive} />
               <View style={styles.spacer} />
 
               <ThemedText type="subtitle">Pedometer Data</ThemedText>
-              <PedometerSensor />
+              <PedometerSensor isAllSensorsActive={isAllSensorsActive} />
               <View style={styles.spacer} />
 
               <ThemedText type="subtitle">Device Motion Data</ThemedText>
-              <DeviceMotionSensor />
+              <DeviceMotionSensor isAllSensorsActive={isAllSensorsActive} />
               <View style={styles.spacer} />
-
             </View>
           </>
         ) : (
@@ -143,6 +162,7 @@ export default function HomeScreen() {
   );
 }
 
+// Define styles for the HomeScreen component
 const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,

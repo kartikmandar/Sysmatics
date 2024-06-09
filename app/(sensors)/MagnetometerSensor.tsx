@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Magnetometer } from 'expo-sensors';
 import { View, Text, Button, StyleSheet, useColorScheme } from 'react-native';
-import { getFormattedTimestamp } from '../(utils)/timeStamp';
+import { getFormattedTimestamp } from '../(utils)/timeStamp'; // Importing utility function for formatted timestamp
 
-const MagnetometerSensor = () => {
+// Component for Magnetometer Sensor
+const MagnetometerSensor = ({ isAllSensorsActive }) => {
+  // State variables
   const [data, setData] = useState({ x: 0, y: 0, z: 0 });
   const [timestamp, setTimestamp] = useState('');
   const [isSensorActive, setIsSensorActive] = useState(false);
   const [subscription, setSubscription] = useState(null);
   const [isAvailable, setIsAvailable] = useState(true);
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme(); // Custom hook for color scheme
 
+  // Effect to check sensor availability
   useEffect(() => {
     const checkAvailability = async () => {
       const available = await Magnetometer.isAvailableAsync();
@@ -18,6 +21,7 @@ const MagnetometerSensor = () => {
     };
     checkAvailability();
 
+    // Cleanup subscription on unmount
     return () => {
       if (subscription) {
         subscription.remove();
@@ -25,8 +29,18 @@ const MagnetometerSensor = () => {
     };
   }, [subscription]);
 
+  // Effect to handle global sensor start/stop
+  useEffect(() => {
+    if (isAllSensorsActive) {
+      startSensor();
+    } else {
+      stopSensor();
+    }
+  }, [isAllSensorsActive]);
+
+  // Function to start the sensor
   const startSensor = () => {
-    if (isAvailable) {
+    if (isAvailable && !isSensorActive) {
       Magnetometer.setUpdateInterval(1000);
       const newSubscription = Magnetometer.addListener(magnetometerData => {
         setData(magnetometerData);
@@ -37,6 +51,7 @@ const MagnetometerSensor = () => {
     }
   };
 
+  // Function to stop the sensor
   const stopSensor = () => {
     if (subscription) {
       subscription.remove();
@@ -45,8 +60,10 @@ const MagnetometerSensor = () => {
     }
   };
 
+  // Dynamic styles based on color scheme
   const dynamicStyles = styles(colorScheme);
 
+  // Display message if sensor is not available on the device
   if (!isAvailable) {
     return (
       <View style={dynamicStyles.container}>
@@ -69,6 +86,7 @@ const MagnetometerSensor = () => {
   );
 };
 
+// Styles for the component
 const styles = (colorScheme: string) => StyleSheet.create({
   container: {
     marginTop: 20,
