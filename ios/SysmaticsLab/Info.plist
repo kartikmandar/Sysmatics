@@ -79,5 +79,14 @@
     <string>Automatic</string>
     <key>UIViewControllerBasedStatusBarAppearance</key>
     <false/>
+
+    <!-- Add the motion usage description key -->
+    <key>NSMotionUsageDescription</key>
+    <string>This app uses motion sensors to provide data collection functionality for scientific research.</string>
+
+    <!-- If your app uses location data, you can also add: -->
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>This app uses location data to provide accurate environmental data collection.</string>
+
   </dict>
 </plist>

@@ -14,14 +14,22 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.kartikmandar.SysmaticsLab"
+      "bundleIdentifier": "com.kartikmandar.SysmaticsLab",
+      "infoPlist": {
+        "NSMotionUsageDescription": "This app uses motion sensors to provide data collection functionality for scientific research.",
+        "NSLocationWhenInUseUsageDescription": "This app uses location data to provide accurate environmental data collection."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.kartikmandar.SysmaticsLab"
+      "package": "com.kartikmandar.SysmaticsLab",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
     },
     "web": {
       "bundler": "metro",
